@@ -1,28 +1,44 @@
 import videos from '../models/Video.js';
 
 class VideoController {
+  // static viewVideos = (req, res) => {
+  //   videos.find({}, (err, videos) => {
+  //     if (err) {
+  //       res.status(500).send({ message: 'erro no servidor' });
+  //     } else {
+  //       res.status(200).json(videos);
+  //     }
+  //   });
+  // };
+
   static viewVideos = (req, res) => {
-    videos.find({}, (err, videos) => {
-      if (err) {
-        res.status(500).send({ message: 'erro no servidor' });
-      } else {
-        res.status(200).json(videos);
-      }
-    });
+    videos
+      .find()
+      .populate('category')
+      .exec((err, videos) => {
+        if (err) {
+          res.status(500).send({ message: 'erro no servidor' });
+        } else {
+          res.status(200).json(videos);
+        }
+      });
   };
 
   static viewVideoById = (req, res) => {
     const id = req.params.id;
 
-    videos.findById(id, (err, videos) => {
-      if (err) {
-        res.status(400).send({
-          message: `${err.message} - Id do vídeo não localizado`
-        });
-      } else {
-        res.status(200).send(videos);
-      }
-    });
+    videos
+      .findById(id)
+      .populate('category')
+      .exec((err, videos) => {
+        if (err) {
+          res.status(400).send({
+            message: `${err.message} - Id do vídeo não localizado`
+          });
+        } else {
+          res.status(200).send(videos);
+        }
+      });
   };
 
   static saveVideo = (req, res) => {
