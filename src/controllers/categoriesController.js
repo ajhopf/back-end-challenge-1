@@ -1,4 +1,5 @@
 import categories from '../models/Category.js';
+import videos from '../models/Video.js';
 
 class CategoryController {
   static viewCategories = (req, res) => {
@@ -23,6 +24,21 @@ class CategoryController {
     });
   };
 
+  static viewCategoryVideos = (req, res) => {
+    const id = req.params.id;
+
+    videos
+      .find({ category: id })
+      .populate('category')
+      .exec((err, videos) => {
+        if (err) {
+          res.status(500).send({ message: err.message });
+        } else {
+          res.status(200).json(videos);
+        }
+      });
+  };
+
   static saveCategory = async (req, res) => {
     let category = new categories(req.body);
 
@@ -41,6 +57,28 @@ class CategoryController {
         res.status(201).send(category.toJSON());
       }
     });
+  };
+
+  static updateCategory = (req, res) => {
+    const id = req.params.id;
+
+    categories.findByIdAndUpdate(
+      id,
+      { $set: req.body },
+      { new: true },
+      (err, category) => {
+        if (err) {
+          res.status(500).send({
+            message: err.messge
+          });
+        } else {
+          res.status(200).send({
+            message: 'Categoria atualizada com sucesso',
+            category: category
+          });
+        }
+      }
+    );
   };
 
   static deleteCategory = (req, res) => {
