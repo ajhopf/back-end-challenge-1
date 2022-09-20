@@ -98,6 +98,4 @@ class CategoryController {
   };
 }
 
-async function numberOfDocs() {}
-
 export default CategoryController;

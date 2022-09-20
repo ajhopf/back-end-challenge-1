@@ -5,6 +5,7 @@ const router = express.Router();
 
 router
   .get('/videos', VideoController.viewVideos)
+  .get('/videos/search', VideoController.viewVideoByTitle)
   .get('/videos/:id', VideoController.viewVideoById)
   .post('/videos', VideoController.saveVideo)
   .put('/videos/:id', VideoController.updateVideo)

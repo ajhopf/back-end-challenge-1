@@ -91,6 +91,22 @@ class VideoController {
       }
     });
   };
+
+  static viewVideoByTitle = (req, res) => {
+    const title = req.query.title;
+
+    videos
+      .find({ title: title })
+      .populate('category')
+      .exec((err, video) => {
+        if (err) {
+          res.status(404).send({
+            message: err.message
+          });
+        }
+        res.status(200).send(video);
+      });
+  };
 }
 
 function validateNewVideo(body) {
