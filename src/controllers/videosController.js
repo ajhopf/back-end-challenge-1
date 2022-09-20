@@ -1,16 +1,6 @@
 import videos from '../models/Video.js';
 
 class VideoController {
-  // static viewVideos = (req, res) => {
-  //   videos.find({}, (err, videos) => {
-  //     if (err) {
-  //       res.status(500).send({ message: 'erro no servidor' });
-  //     } else {
-  //       res.status(200).json(videos);
-  //     }
-  //   });
-  // };
-
   static viewVideos = (req, res) => {
     videos
       .find()
@@ -44,21 +34,23 @@ class VideoController {
   static saveVideo = (req, res) => {
     let video = new videos(req.body);
 
-    if (validateNewVideo(req.body) === true) {
-      video.save(err => {
-        if (err) {
-          res.status(500).send({
-            message: `${err.message} - falha ao salvar o vídeo`
-          });
-        } else {
-          res.status(201).send(video.toJSON());
-        }
-      });
-    } else {
-      res.status(400).send({
-        message: validateNewVideo(req.body)
-      });
+    if (!video.category) {
+      video.category = 1;
     }
+
+    video.save(err => {
+      if (err) {
+        res.status(500).send({
+          message: `${err.message} - falha ao salvar o vídeo`
+        });
+      } else if (validateNewVideo(req.body) === true) {
+        res.status(201).send(video.toJSON());
+      } else {
+        res.status(400).send({
+          message: validateNewVideo(req.body)
+        });
+      }
+    });
   };
 
   static updateVideo = (req, res) => {
